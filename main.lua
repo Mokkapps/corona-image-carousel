@@ -127,14 +127,29 @@ end
 
 rotationTimer = timer.performWithDelay(rotationTime, rotateImages, -1)
 
-local function onObjectTap( event )
+local function toggleRotationTimer()
   if rotationTimer then
+    print("Stop rotation")
     timer.cancel( rotationTimer )
     rotationTimer = nil
     getCenterPicture()
   else
+    print("Start rotation")
     rotationTimer = timer.performWithDelay(rotationTime, rotateImages, -1)
   end
-  return true
 end
-displayGroup:addEventListener( "tap", onObjectTap )
+
+-- Called when a key event has been received
+local function onKeyEvent( event )
+
+  if ( event.keyName == "space" ) and event.phase == "down" then
+    toggleRotationTimer()
+  end
+
+  -- IMPORTANT! Return false to indicate that this app is NOT overriding the received key
+  -- This lets the operating system execute its default handling of the key
+  return false
+end
+
+-- Add the key event listener
+Runtime:addEventListener( "key", onKeyEvent )
